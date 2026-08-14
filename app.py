@@ -78,6 +78,17 @@ def atualizar_livro(id):
         "autor": livro.autor
     })
       
+
+@app.route("/livros/<int:id>", methods=["DELETE"])
+def deletar_livro(id):
+    livro = db.get_or_404(Livro, id)
+    
+    db.session.delete(livro)
+    db.session.commit()
+    
+    return jsonify({
+        "mensagem": "Livro deletado com sucesso"
+    })
     
 if __name__ == "__main__":
     app.run(debug=True)
