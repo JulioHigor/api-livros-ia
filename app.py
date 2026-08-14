@@ -34,6 +34,16 @@ def listar_livros():
 
     return jsonify(resultado)
 
+@app.route("/livros/<int:id>", methods=["GET"])
+def buscar_livro(id):
+    livro = db.get_or_404(Livro, id)
+    
+    return jsonify({
+        "id": livro.id,
+        "titulo": livro.titulo,
+        "autor": livro.autor
+    })
+
 @app.route("/livros", methods=["POST"])
 def criar_livro():
     dados = request.get_json()
@@ -52,5 +62,22 @@ def criar_livro():
         "autor": novo_livro.autor
     }), 201
 
+@app.route("/livros/<int:id>", methods=["PUT"])
+def atualizar_livro(id):
+    livro = db.get_or_404(Livro, id)
+    dados = request.get_json()
+
+    livro.titulo = dados["titulo"]
+    livro.autor = dados["autor"]
+
+    db.session.commit()
+
+    return jsonify({
+        "id": livro.id,
+        "titulo": livro.titulo,
+        "autor": livro.autor
+    })
+      
+    
 if __name__ == "__main__":
     app.run(debug=True)
